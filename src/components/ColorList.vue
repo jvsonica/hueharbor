@@ -13,8 +13,6 @@
             <ColorBox :color="element.color" />
         </template>
     </draggable>
-
-    <pre>{{ JSON.stringify(this.colorList, null, 2) }}</pre>
 </template>
   
 <script>
@@ -32,11 +30,7 @@ export default {
     data() {
         return {
             drag: false,
-            colorList: [
-                { color: "#0000aa", uuid: uuid() },
-                { color: "#00aa00", uuid: uuid() },
-                { color: "#000000", uuid: uuid() },
-            ]
+            colorList: []
         };
     },
     methods: {
