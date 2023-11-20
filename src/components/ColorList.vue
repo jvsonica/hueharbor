@@ -2,12 +2,18 @@
     <ColorForm @addColor="addColor" />
 
     <draggable
-        v-model="colorList"
-        :move="checkMove"
         class="color-list"
-        item-key="hex"
+        tag="transition-group"
+        :component-data="{
+            tag: 'div',
+            type: 'transition-group',
+            name: 'flip-list',
+        }"
+        v-model="colorList"
+        v-bind="dragOptions"
         @start="drag = true"
         @end="drag = false"
+        item-key="colorList.length"
     >
         <template #item="{ element }">
             <ColorBox :color="element" @removeColor="removeColor" />
@@ -33,16 +39,23 @@ export default {
             colorList: []
         };
     },
+    computed: {
+        dragOptions() {
+            return {
+                animation: 200,
+                ghostClass: "ghost",
+            };
+        },
+    },
     methods: {
         addColor(newColorHex) {
             this.colorList.push({ hex: newColorHex, uuid: uuid() });
         },
         removeColor(colorToBeRemoved) {
-            this.colorList = this.colorList.filter(c => c.uuid !== colorToBeRemoved.uuid);
-        },
-        checkMove(move) {
-            console.log("checking move", move);
-        },
+            this.colorList = this.colorList.filter(
+                (c) => c.uuid !== colorToBeRemoved.uuid
+            );
+        }
     },
 };
 </script>
@@ -52,5 +65,18 @@ export default {
     flex-direction: column;
     gap: 0.4rem;
     margin-top: 2rem;
+}
+
+.flip-list-move {
+    transition: transform 0.5s;
+}
+
+.no-move {
+    transition: transform 0s;
+}
+
+.ghost {
+    opacity: 0.1;
+    background: #c8ebfb;
 }
 </style>
