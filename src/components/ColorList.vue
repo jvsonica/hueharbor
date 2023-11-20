@@ -1,16 +1,16 @@
 <template>
-    <ColorForm @colorAdded="addColor" />
+    <ColorForm @addColor="addColor" />
 
     <draggable
         v-model="colorList"
         :move="checkMove"
         class="color-list"
-        item-key="color"
+        item-key="hex"
         @start="drag = true"
         @end="drag = false"
     >
         <template #item="{ element }">
-            <ColorBox :color="element.color" />
+            <ColorBox :color="element" @removeColor="removeColor" />
         </template>
     </draggable>
 </template>
@@ -34,8 +34,11 @@ export default {
         };
     },
     methods: {
-        addColor(newColor) {
-            this.colorList.push({ color: newColor, uuid: uuid() });
+        addColor(newColorHex) {
+            this.colorList.push({ hex: newColorHex, uuid: uuid() });
+        },
+        removeColor(colorToBeRemoved) {
+            this.colorList = this.colorList.filter(c => c.uuid !== colorToBeRemoved.uuid);
         },
         checkMove(move) {
             console.log("checking move", move);

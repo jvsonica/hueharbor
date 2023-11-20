@@ -17,7 +17,7 @@ export default {
             const isValidColor = this.isValidColor(this.newColor);
 
             if (isValidColor) {
-                this.$emit("colorAdded", this.newColor);
+                this.$emit("addColor", this.newColor);
                 this.newColor = "";
             } else {
                 alert("Please enter a valid CSS color name or hex color code.");

@@ -1,29 +1,34 @@
 <template>
-    <div class="color-box" :style="{ backgroundColor: color }">
-        <button @click="copyToClipboard" class="copy-button">
-            {{ color }} <CopyIcon />
+    <div class="color-box" :style="{ backgroundColor: color.hex }">
+        <button @click="copyToClipboard" class="button-copy">
+            {{ color.hex }} &nbsp; <IconCopy />
+        </button>
+        <button @click="removeColor" class="button-delete">
+            <IconDelete />
         </button>
     </div>
 </template>
   
-  <script>
+<script>
 import Clipboard from "clipboard";
-import CopyIcon from "@/assets/copy-icon.vue";
+import IconDelete from "@/assets/delete.svg";
+import IconCopy from "@/assets/copy.svg";
 
 export default {
     props: {
         color: {
-            type: String,
+            type: Object,
             required: true,
         },
     },
     components: {
-        CopyIcon,
+        IconCopy,
+        IconDelete,
     },
     mounted() {
         // Initialize clipboard.js for the copy button
-        this.clipboard = new Clipboard(this.$el.querySelector(".copy-button"), {
-            text: () => this.color,
+        this.clipboard = new Clipboard(this.$el.querySelector(".button-copy"), {
+            text: () => this.color?.hex,
         });
     },
     beforeDestroy() {
@@ -36,14 +41,17 @@ export default {
         copyToClipboard() {
             // Programmatically trigger the copy action
             this.clipboard.onClick({
-                currentTarget: this.$el.querySelector(".copy-button"),
+                currentTarget: this.$el.querySelector(".button-copy"),
             });
+        },
+        removeColor() {
+            this.$emit("removeColor", this.color);
         },
     },
 };
 </script>
   
-  <style scoped>
+<style scoped>
 .color-box {
     width: 100%;
     height: 55px;
@@ -54,24 +62,30 @@ export default {
     cursor: grab;
 }
 
-.copy-button {
+.color-box > * {
+    margin-right: 5px;
+}
+
+svg {
+    height: 1rem;
+    width: auto;
+    fill: #fff;
+}
+
+button {
     cursor: pointer;
     background-color: #000;
     color: #fff;
     border: none;
-    padding: 5px;
     font-size: 0.8rem;
-    margin-right: 5px;
+    padding: 5px;
     border-radius: 3px;
     display: flex;
     align-content: center;
 }
 
-.copy-button svg {
-    height: 1rem;
-    width: auto;
-    margin: 0 3px;
-    fill: #fff
+button:hover {
+    background-color: #333;
 }
 </style>
   
